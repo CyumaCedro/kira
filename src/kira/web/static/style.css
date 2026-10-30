@@ -257,6 +257,42 @@ canvas { max-width: 100%; height: auto; display: block; border-radius: 6px; }
 .tumor-explainer summary { cursor: pointer; font-weight: 700; font-size: 15px; }
 .tumor-explainer summary .muted { font-weight: 400; margin-left: 6px; }
 .tumor-explainer[open] summary { margin-bottom: 14px; }
+/* auto-fit stacks the pairs whenever the card is too narrow for side-by-side */
+.tvc { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap: 20px; align-items: center; margin-bottom: 16px; }
+.tvc figure { margin: 0 auto; width: 100%; max-width: 360px; }
+.tvc-venn svg, .tvc-cells-fig svg { width: 100%; height: auto; display: block; }
+.venn-tumor { fill: var(--ok); fill-opacity: .14; stroke: var(--ok); stroke-width: 1.5; }
+.venn-cancer { fill: var(--danger); fill-opacity: .14; stroke: var(--danger); stroke-width: 1.5; }
+.venn-title { font: 700 13px var(--font); text-anchor: middle; fill: var(--text); text-transform: uppercase; letter-spacing: .06em; }
+.venn-label { font: 600 12px var(--font); text-anchor: middle; fill: var(--text); }
+.venn-note { font: 10.5px var(--font); text-anchor: middle; fill: var(--muted); }
+.venn-foot { font: 11px var(--font); text-anchor: middle; fill: var(--muted); }
+.tvc-table { font-size: 13px; }
+.tvc-table th, .tvc-table td { white-space: normal; vertical-align: top; }
+.tvc-table tbody th { color: var(--muted); font-weight: 600; width: 22%; position: static; }
+.tvc-table-wrap { max-height: none; }
+.tvc-pill { font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; }
+.tvc-pill.tumor { background: var(--ok-soft); color: var(--ok); }
+.tvc-pill.cancer { background: var(--danger-soft); color: var(--danger); }
+.tvc-cells { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; align-items: center; margin-bottom: 18px; }
+.tvc-cells p { margin: 0; font-size: 14px; }
+.tvc-cells-fig { margin: 0; }
+.tvc-cells-fig .tissue { fill: var(--surface-2); stroke: var(--border); }
+.tvc-cells-fig .capsule { fill: var(--ok-soft); stroke: var(--ok); stroke-width: 1.5; }
+.tvc-cells-fig .cell { fill: #f3c6d6; stroke: #c98aa4; stroke-width: .8; }
+.tvc-cells-fig .nucleus { fill: #6b4c9a; }
+.tvc-cells-fig .cell.bad { fill: #e9a9c1; stroke: #b0547a; }
+.tvc-cells-fig .nucleus.bad { fill: #3f2a6b; }
+.tvc-cells-fig .membrane { stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 10 4; }
+.tvc-cells-fig .vessel { fill: var(--danger-soft); stroke: var(--danger); stroke-width: 1; }
+.tvc-cells-fig .escape { stroke: var(--danger); stroke-width: 1.5; fill: none; }
+.cells-label { font: 700 12px var(--font); text-anchor: middle; }
+.cells-label.ok { fill: var(--ok); }
+.cells-label.bad { fill: var(--danger); }
+.cells-note { font: 10px var(--font); text-anchor: middle; fill: var(--muted); }
+.tvc-sub { margin: 4px 0 10px; }
+.organ-facts dd.benign-line { color: var(--ok); }
+
 .tumor-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
 .tumor-type { border: 1px solid var(--border); border-top: 4px solid var(--t-color); border-radius: 8px; padding: 14px; }
 .tumor-type.benign { --t-color: var(--ok); --t-soft: var(--ok-soft); }

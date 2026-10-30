@@ -350,6 +350,86 @@ const STAGE_SCALE = [
   const term = () => CANCERS[state.cancer].term;
   const fill = (s) => s.replaceAll("{cancer}", term());
 
+  function renderTumorVsCancer() {
+    $("#tvc-venn").innerHTML = `
+      <svg viewBox="0 0 360 230" role="img" aria-label="Venn diagram: tumors and cancers overlap only in malignant tumors">
+        <circle cx="135" cy="112" r="98" class="venn-tumor"/>
+        <circle cx="225" cy="112" r="98" class="venn-cancer"/>
+        <text x="92" y="44" class="venn-title">Tumors</text>
+        <text x="268" y="44" class="venn-title">Cancers</text>
+        <text x="84" y="88" class="venn-label">Benign</text>
+        <text x="84" y="104" class="venn-note">lipoma, fibroid</text>
+        <text x="84" y="134" class="venn-label">Pre-</text>
+        <text x="84" y="149" class="venn-label">cancerous</text>
+        <text x="84" y="164" class="venn-note">polyps</text>
+        <text x="180" y="100" class="venn-label">Malignant</text>
+        <text x="180" y="116" class="venn-label">tumors</text>
+        <text x="180" y="134" class="venn-note">carcinoma,</text>
+        <text x="180" y="147" class="venn-note">sarcoma, glioma</text>
+        <text x="276" y="104" class="venn-label">Blood</text>
+        <text x="276" y="120" class="venn-label">cancers</text>
+        <text x="276" y="138" class="venn-note">leukemia,</text>
+        <text x="276" y="151" class="venn-note">no lump</text>
+        <text x="180" y="226" class="venn-foot">Cancer = the malignant part, with or without a lump</text>
+      </svg>`;
+
+    const rows = [
+      ["What it is", "Any abnormal lump of cells. Doctors also say mass, growth or neoplasm.", "A disease in which abnormal cells grow out of control and invade the body."],
+      ["Always dangerous?", "No. Most tumors are benign.", "Yes. It needs treatment or close monitoring."],
+      ["Invades and spreads?", "Only if it is malignant.", "Yes. It can invade nearby tissue and spread (metastasize)."],
+      ["Forms a lump?", "Always, by definition.", "Not always. Leukemia has no lump."],
+      ["After removal", "Benign tumors rarely come back.", "Can come back (recurrence), sometimes years later."],
+    ];
+    $("#tvc-table").innerHTML = `
+      <thead><tr><th></th><th><span class="tvc-pill tumor">Tumor</span></th><th><span class="tvc-pill cancer">Cancer</span></th></tr></thead>
+      <tbody>${rows.map(([k, a, b]) => `<tr><th scope="row">${esc(k)}</th><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join("")}</tbody>`;
+
+    // Deterministic "random" so the drawing is identical on every load.
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const benign = [];
+    for (let y = 38; y <= 86; y += 15) {
+      for (let x = 37; x <= 133; x += 15) {
+        if (((x - 85) / 58) ** 2 + ((y - 62) / 36) ** 2 < 0.8) {
+          benign.push(`<circle cx="${x}" cy="${y}" r="6.5" class="cell"/><circle cx="${x}" cy="${y}" r="2.2" class="nucleus"/>`);
+        }
+      }
+    }
+    const spots = [[22, 40], [42, 30], [60, 48], [80, 34], [100, 52], [118, 38], [138, 50], [30, 62], [52, 70], [74, 64],
+      [96, 76], [120, 68], [142, 74], [64, 86], [110, 88], [150, 30], [86, 100], [128, 104]];
+    const malignant = spots.map(([x, y]) => {
+      const r = 4 + rnd() * 6;
+      const sx = x + (rnd() - 0.5) * 4;
+      const sy = y + (rnd() - 0.5) * 4;
+      return `<ellipse cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" rx="${r.toFixed(1)}" ry="${(r * (0.7 + rnd() * 0.5)).toFixed(1)}" class="cell bad"/>` +
+        `<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${(r * 0.55).toFixed(1)}" class="nucleus bad"/>`;
+    }).join("");
+
+    $("#tvc-cells").innerHTML = `
+      <svg viewBox="0 0 360 150" role="img" aria-label="Benign cells are orderly inside a capsule; malignant cells are irregular and invade a blood vessel">
+        <rect x="2" y="2" width="168" height="118" rx="10" class="tissue"/>
+        <ellipse cx="85" cy="62" rx="62" ry="40" class="capsule"/>
+        ${benign.join("")}
+        <text x="86" y="138" class="cells-label ok">Benign</text>
+        <text x="86" y="149" class="cells-note">orderly, stays in its capsule</text>
+
+        <g transform="translate(188 0)">
+          <rect x="2" y="2" width="168" height="118" rx="10" class="tissue"/>
+          <path d="M2 94 L170 94" class="membrane"/>
+          <rect x="2" y="98" width="168" height="16" class="vessel"/>
+          ${malignant}
+          <path d="M120 104 L160 106" class="escape" marker-end="url(#tvc-arrow)"/>
+          <text x="86" y="138" class="cells-label bad">Malignant</text>
+          <text x="86" y="149" class="cells-note">irregular, invades, enters vessels</text>
+        </g>
+        <defs>
+          <marker id="tvc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+            <path d="M0 0 L10 5 L0 10z" class="arrow-head"/>
+          </marker>
+        </defs>
+      </svg>`;
+  }
+
   function renderTumorTypes() {
     $("#tumor-types").innerHTML = TUMOR_TYPES.map((t) => `
       <div class="tumor-type ${t.kind}">
@@ -509,6 +589,7 @@ const STAGE_SCALE = [
     if (e.key === "ArrowLeft") goStage(state.stage - 1);
   });
 
+  renderTumorVsCancer();
   renderTumorTypes();
   render();
   K.anatomy?.show(state.cancer);
