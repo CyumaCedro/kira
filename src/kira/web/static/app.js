@@ -71,6 +71,7 @@ function show(view) {
   $$(".view").forEach((v) => v.classList.toggle("active", v.id === `view-${view}`));
   history.replaceState(null, "", `#${view}`);
   window.scrollTo(0, 0);
+  document.dispatchEvent(new CustomEvent("kira:view", { detail: view }));
 }
 $$("nav button").forEach((b) => b.addEventListener("click", () => show(b.dataset.view)));
 $$("[data-go]").forEach((a) => a.addEventListener("click", () => show(a.dataset.go)));
@@ -160,10 +161,11 @@ $("#lit-sort").addEventListener("change", renderPapers);
 // ---------- remedies ----------
 let currentRemedy = null;
 let currentRemedySmiles = null;
+let remedyList = [];
 
 async function loadRemedies() {
   try {
-    const list = await api("/api/remedies");
+    const list = (remedyList = await api("/api/remedies"));
     $("#remedy-grid").innerHTML = list.map((r) =>
       `<button class="remedy-card" data-key="${esc(r.key)}"><strong>${esc(r.name)}</strong><span>${esc(r.source)}</span></button>`).join("");
   } catch (err) {
@@ -172,14 +174,21 @@ async function loadRemedies() {
 }
 $("#remedy-grid").addEventListener("click", (e) => {
   const card = e.target.closest("[data-key]");
-  if (!card) return;
-  currentRemedy = card.dataset.key;
-  $("#remedy-name").textContent = card.querySelector("strong").textContent;
-  $("#remedy-source").textContent = card.querySelector("span").textContent;
+  if (card) openRemedy(card.dataset.key);
+});
+
+async function openRemedy(key, cancer = "") {
+  if (!remedyList.length) await loadRemedies();
+  const r = remedyList.find((x) => x.key === key);
+  if (!r) return;
+  currentRemedy = key;
+  $("#remedy-name").textContent = r.name;
+  $("#remedy-source").textContent = r.source;
+  $("#remedy-form [name=cancer]").value = cancer;
   $("#remedy-grid").classList.add("hidden");
   $("#remedy-detail").classList.remove("hidden");
   runReview();
-});
+}
 $("#remedy-back").addEventListener("click", () => {
   $("#remedy-detail").classList.add("hidden");
   $("#remedy-grid").classList.remove("hidden");
@@ -387,9 +396,14 @@ async function analyzeSmiles(smiles) {
   }
 }
 
-$("#target-form").addEventListener("submit", async (e) => {
+$("#target-form").addEventListener("submit", (e) => {
   e.preventDefault();
-  const gene = e.target.gene.value.trim();
+  findTargets(e.target.gene.value.trim());
+});
+
+async function findTargets(gene) {
+  $("#target-form [name=gene]").value = gene;
+  $("#target-form").scrollIntoView({ block: "center", behavior: "smooth" });
   status($("#target-status"), "loading", `Searching ChEMBL for ${gene}…`);
   $("#target-list").innerHTML = "";
   $("#activity-table").innerHTML = "";
@@ -403,7 +417,7 @@ $("#target-form").addEventListener("submit", async (e) => {
   } catch (err) {
     status($("#target-status"), "error", err.message);
   }
-});
+}
 
 $("#target-list").addEventListener("click", async (e) => {
   const chip = e.target.closest("[data-target]");
@@ -431,10 +445,13 @@ $("#activity-table").addEventListener("click", (e) => {
 });
 
 // ---------- init ----------
+// Hooks used by journey.js to drive the tools.
+window.kira = { $, esc, show, searchPapers, openRemedy, findTargets };
+
 loadRemedies();
 function showFromHash() {
   const view = location.hash.slice(1);
-  if (view && $(`#view-${view}`)) show(view);
+  show(view && $(`#view-${view}`) ? view : "journey");
 }
 window.addEventListener("hashchange", showFromHash);
 showFromHash();

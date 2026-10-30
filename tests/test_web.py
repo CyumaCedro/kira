@@ -11,6 +11,7 @@ client = TestClient(app)
 def test_index_and_static():
     assert "Kira" in client.get("/").text
     assert client.get("/static/app.js").status_code == 200
+    assert client.get("/static/journey.js").status_code == 200
 
 
 def test_remedies_list():

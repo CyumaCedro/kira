@@ -14,7 +14,8 @@
       <div><strong>Kira</strong><small>Cancer research workbench</small></div>
     </div>
     <nav>
-      <button data-view="home" class="active"><span class="ico">◎</span>Overview</button>
+      <button data-view="journey" class="active"><span class="ico">➝</span>Cancer journey</button>
+      <button data-view="home"><span class="ico">◎</span>All tools</button>
       <button data-view="literature"><span class="ico">❡</span>Literature</button>
       <button data-view="remedies"><span class="ico">✿</span>Integrative remedies</button>
       <button data-view="genomics"><span class="ico">≋</span>Genomics</button>
@@ -28,8 +29,31 @@
   </aside>
 
   <main>
+    <div id="journey-back" class="journey-back hidden">
+      <button class="ghost small">← Back to the cancer journey</button>
+      <span id="journey-back-label" class="muted"></span>
+    </div>
+
+    <!-- Cancer journey -->
+    <section id="view-journey" class="view active">
+      <header class="page-head">
+        <h1>The cancer journey</h1>
+        <p>Follow cancer from prevention to survivorship. Each stage explains what happens in plain language, suggests questions to ask, and links to the research behind it.</p>
+      </header>
+      <div class="journey-picker">
+        <span class="muted">Cancer type</span>
+        <div class="chips" id="journey-cancers"></div>
+      </div>
+      <div class="journey-track card">
+        <div class="phases" id="journey-phases"></div>
+        <div class="steps" id="journey-steps"></div>
+      </div>
+      <article id="journey-detail" class="card journey-detail"></article>
+      <p class="muted small-text">General education for research. Not medical advice. Decisions about care belong with a qualified oncology team. Tip: use ← → keys to move between stages.</p>
+    </section>
+
     <!-- Overview -->
-    <section id="view-home" class="view active">
+    <section id="view-home" class="view">
       <header class="page-head">
         <h1>Research workbench</h1>
         <p>Search the literature, review the evidence for integrative remedies, and run quick analyses on genomic, imaging and chemical data.</p>
@@ -41,6 +65,7 @@
         </form>
       </div>
       <div class="tiles-grid">
+        <a class="tile-link" data-go="journey"><span class="ico big">➝</span><h3>Cancer journey</h3><p>Nine stages from prevention to advanced care, each explained simply and linked to the research.</p></a>
         <a class="tile-link" data-go="literature"><span class="ico big">❡</span><h3>Literature</h3><p>PubMed search with every paper ranked by study design, from cell culture to meta-analysis.</p></a>
         <a class="tile-link" data-go="remedies"><span class="ico big">✿</span><h3>Integrative remedies</h3><p>Evidence reviews for curcumin, mistletoe, medicinal mushrooms and more, with drug-interaction cautions.</p></a>
         <a class="tile-link" data-go="genomics"><span class="ico big">≋</span><h3>Genomics</h3><p>Upload a somatic VCF to get tumor mutational burden and driver-gene hits.</p></a>
@@ -233,5 +258,6 @@
   </main>
 
   <script src="/static/app.js"></script>
+  <script src="/static/journey.js"></script>
 </body>
 </html>
