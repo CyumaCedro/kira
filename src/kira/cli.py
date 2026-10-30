@@ -50,6 +50,13 @@ def _cmd_tiles(args: argparse.Namespace) -> None:
     print(f"{len(tiles)} tissue tiles of {args.size}px")
 
 
+def _cmd_web(args: argparse.Namespace) -> None:
+    import uvicorn
+
+    print(f"Kira running at http://{args.host}:{args.port}")
+    uvicorn.run("kira.web.app:app", host=args.host, port=args.port, reload=args.reload)
+
+
 def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="kira", description="Cancer research toolkit")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -79,6 +86,12 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--size", type=int, default=256)
     p.add_argument("--min-tissue", type=float, default=0.5)
     p.set_defaults(func=_cmd_tiles)
+
+    p = sub.add_parser("web", help="Start the web interface (needs kira[web])")
+    p.add_argument("--host", default="127.0.0.1")
+    p.add_argument("--port", type=int, default=8000)
+    p.add_argument("--reload", action="store_true", help="Restart on code changes")
+    p.set_defaults(func=_cmd_web)
 
     args = parser.parse_args(argv)
     # Paper titles contain characters the Windows console code page can't encode.

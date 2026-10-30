@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kira-web",
+      "runtimeExecutable": ".venv/Scripts/kira.exe",
+      "runtimeArgs": ["web", "--port", "8000"],
+      "port": 8000
+    }
+  ]
+}

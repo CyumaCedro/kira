@@ -20,7 +20,15 @@ pip install -e ".[all]"
 
 Optional: set `NCBI_API_KEY` and `NCBI_EMAIL` to raise PubMed's limit from 3 to 10 requests per second.
 
-## Usage
+## Web app
+
+```bash
+kira web
+```
+
+Then open http://127.0.0.1:8000. It has a panel for each area: literature search with evidence filters, remedy evidence reviews, VCF analysis, slide tiling preview, and drug-likeness with ChEMBL lookup. The Genomics and Imaging panels have sample data buttons, so you can try them without your own files.
+
+## Command line
 
 ```bash
 kira remedy list
