@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kira"
+version = "0.1.0"
+description = "Cancer research toolkit: genomics, imaging & pathology, drug discovery, literature mining, and evidence review of integrative remedies."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.1",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+chem = ["rdkit>=2023.9"]
+imaging = ["pillow>=10.0"]
+dev = ["pytest>=8.0"]
+all = ["kira[chem,imaging,dev]"]
+
+[project.scripts]
+kira = "kira.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kira"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["network: tests that call external APIs (deselect with -m 'not network')"]
