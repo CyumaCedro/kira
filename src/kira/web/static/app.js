@@ -90,14 +90,16 @@ $("#legend").innerHTML = LEVELS.map((l) => `<div>${badge(l.name)}<small>${esc(l.
 
 // ---------- literature ----------
 const lit = { results: [], filter: null };
-const LIT_EXAMPLES = [
+function setLitExamples(list) {
+  $("#lit-examples").innerHTML = list.map((q) => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join("");
+}
+setLitExamples([
   "immunotherapy melanoma meta-analysis",
   "KRAS G12C inhibitor non-small cell lung cancer",
   "liquid biopsy ctDNA colorectal cancer",
   "deep learning histopathology",
   "exercise cancer survival",
-];
-$("#lit-examples").innerHTML = LIT_EXAMPLES.map((q) => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join("");
+]);
 $("#lit-examples").addEventListener("click", (e) => {
   const q = e.target.closest("[data-q]")?.dataset.q;
   if (q) { $("#lit-form [name=q]").value = q; searchPapers(q); }
@@ -445,8 +447,10 @@ $("#activity-table").addEventListener("click", (e) => {
 });
 
 // ---------- init ----------
-// Hooks used by journey.js to drive the tools.
-window.kira = { $, esc, show, searchPapers, openRemedy, findTargets };
+// Hooks used by modes.js, anatomy.js and journey.js to drive the tools.
+// initialView is the page named in the URL on load, so a saved mode doesn't override a shared link.
+const initialView = location.hash.slice(1);
+window.kira = { $, esc, show, searchPapers, openRemedy, findTargets, setLitExamples, initialView };
 
 loadRemedies();
 function showFromHash() {

@@ -201,7 +201,7 @@ const BODY = `
       <dl class="organ-facts">
         <dt>Benign or precancerous here</dt><dd class="benign-line">${esc(o.benign)}</dd>
         <dt>Main cancers</dt><dd>${esc(o.types)}</dd>
-        <dt>Signs to get checked</dt><dd>${esc(o.signs)}</dd>
+        <dt>${{ student: "When to tell an adult or a doctor", healer: "Signs to refer to a clinic" }[K.mode] ?? "Signs to get checked"}</dt><dd>${esc(o.signs)}</dd>
         <dt>Where it can spread</dt><dd>${esc(o.spreadText)}${o.spread.length ? ' <span class="spread-key">Red arrows on the figure</span>' : ""}</dd>
       </dl>
       <div class="row wrap">
@@ -238,6 +238,7 @@ const BODY = `
     }
   }
 
+  document.addEventListener("kira:mode", () => renderInfo());
   $("#anatomy").addEventListener("click", handle);
   $("#anatomy").addEventListener("keydown", (e) => {
     if ((e.key === "Enter" || e.key === " ") && e.target.matches("g[data-organ]")) {

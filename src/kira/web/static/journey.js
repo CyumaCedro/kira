@@ -327,6 +327,99 @@ const STAGES = [
   },
 ];
 
+// Per-mode content for each stage, in the same order as STAGES. Adult mode uses the stage's own summary and questions.
+const POINT_TITLES = {
+  adult: "Questions to ask the care team",
+  student: "Think about it",
+  practitioner: "Clinical focus",
+  researcher: "Open research questions",
+  healer: "Working alongside medical care",
+};
+
+const STAGE_MODES = [
+  {
+    student: {
+      summary: "Cancer usually takes many years to develop. Some things raise the chance of getting it, like smoking or too much sun, and some things lower it.",
+      points: ["Which everyday habits could lower your cancer risk later in life?", "Why does the HPV vaccine, usually given to teenagers, prevent some cancers?", "How can a gene passed down in a family raise cancer risk?"],
+    },
+    practitioner: ["Take a three-generation family history and refer for genetic counseling when criteria are met.", "Check HPV and hepatitis B vaccination status.", "Offer smoking cessation support, the highest-yield prevention measure."],
+    researcher: ["Which risk factors explain the rise of some cancers in adults under 50?", "Can polygenic risk scores improve on family history alone?", "How do diet and the gut microbiome interact with cancer risk?"],
+    healer: ["Encourage stopping tobacco and limiting alcohol. These lower risk more than any remedy.", "Support vaccination against HPV and hepatitis B in your community.", "Families with many cancer cases may carry an inherited risk. Refer them for medical advice."],
+  },
+  {
+    student: {
+      summary: "Screening means checking healthy people for early signs of cancer before they feel sick. Finding cancer early makes it much easier to treat.",
+      points: ["Why is finding cancer early so important?", "What is a false alarm, and why can screening cause them?", "Which screening tests exist, and at what age do they start?"],
+    },
+    practitioner: ["Apply age- and risk-based screening intervals from current guidelines.", "Discuss overdiagnosis and false positives in shared decision-making.", "Track abnormal results through to diagnostic follow-up."],
+    researcher: ["Do multi-cancer blood tests reduce cancer deaths, or only find more cancer?", "How can screening reach people who currently miss it?", "Can AI reading of mammograms or CT scans safely reduce workload?"],
+    healer: ["Encourage people to attend recommended screening, such as cervical and breast checks.", "Feeling well does not mean someone is free of cancer. Screening finds it before symptoms.", "Help people overcome fear or stigma about being tested."],
+  },
+  {
+    student: {
+      summary: "To be sure it's cancer, doctors take a tiny piece of tissue (a biopsy) and look at the cells under a microscope.",
+      points: ["Why can't a scan alone prove that something is cancer?", "What does a pathologist look for under the microscope?", "How could computers help doctors read slides?"],
+    },
+    practitioner: ["Obtain enough tissue at the first biopsy for histology and molecular testing.", "Seek specialist pathology review for rare or uncertain tumors.", "Coordinate imaging, pathology and multidisciplinary review before treatment."],
+    researcher: ["How well do AI pathology models hold up across hospitals and scanners?", "Can foundation models predict mutations directly from H&E slides?", "Which datasets link images to molecular data and outcomes?"],
+    healer: ["A lump, unexplained bleeding or weight loss needs a medical examination. Refer quickly.", "Only a biopsy can confirm cancer. Encourage patients not to delay it.", "Biopsies very rarely cause cancer to spread. Fear of this should not delay diagnosis."],
+  },
+  {
+    student: {
+      summary: "Staging is like a map of how far the cancer has gone, from stage 0 (tiny and contained) to stage IV (spread to other organs).",
+      points: ["Why does the stage change which treatment is chosen?", "What is the difference between stage and grade?"],
+    },
+    practitioner: ["Use the current AJCC TNM edition for the specific cancer site.", "Complete staging investigations before definitive treatment.", "Record clinical and pathological stage separately."],
+    researcher: ["Can ctDNA or imaging biomarkers refine staging beyond TNM?", "Which stage II patients benefit from additional treatment?"],
+    healer: ["Earlier stages are far more curable. This is why delay is harmful.", "Ask patients what stage their doctors found, to understand their situation."],
+  },
+  {
+    student: {
+      summary: "Cancer starts with mistakes (mutations) in genes. Testing the tumor's genes can show which mistake drives it, and some medicines target exactly that mistake.",
+      points: ["What is a gene mutation?", "How can a drug target one specific mutation?", "Why might two people with the same cancer get different medicines?"],
+    },
+    practitioner: ["Order the guideline-recommended biomarker panel for the tumor type.", "Consider germline testing when results or family history suggest it.", "Use a molecular tumor board for complex results."],
+    researcher: ["Which resistance mutations emerge under targeted therapy?", "How do tumor subclones evolve over time and treatment?", "Which common drivers still lack effective drugs?"],
+    healer: ["Modern treatment can be matched to a tumor's genes. This is a strong reason to seek specialist care.", "Plant compounds are studied in labs, but none replaces targeted medicines."],
+  },
+  {
+    student: {
+      summary: "Treatment can include surgery, radiation, medicines that kill cancer cells, and medicines that help the immune system fight cancer. Usually several are combined.",
+      points: ["How does immunotherapy use the body's own defenses?", "Why does chemotherapy often cause hair loss?", "What is a clinical trial, and why do volunteers matter?"],
+    },
+    practitioner: ["Define treatment intent (curative or palliative) and discuss it clearly.", "Screen for drug interactions, including herbs and supplements.", "Check clinical trial eligibility before first-line therapy."],
+    researcher: ["Why do only some patients respond to immunotherapy?", "Which combinations can prevent or delay resistance?", "Which compounds are active against your target? Try Drug discovery."],
+    healer: ["Never advise stopping or delaying chemotherapy, radiotherapy or surgery.", "Ask which treatment the patient is on before giving any herb.", "Herbs that affect the liver or blood clotting can be dangerous during treatment."],
+  },
+  {
+    student: {
+      summary: "Cancer treatment can cause tiredness, sickness and worry. Supportive care helps people feel better. Some natural therapies are being studied for this.",
+      points: ["Why is exercise helpful even during treatment?", "How can friends and family support someone with cancer?", "How do scientists test whether a natural remedy really works?"],
+    },
+    practitioner: ["Screen routinely for distress, fatigue, pain and nausea.", "Ask every patient about supplements and herbal products.", "Refer to integrative oncology, nutrition and psycho-oncology services."],
+    researcher: ["Which integrative therapies hold up in placebo-controlled trials?", "What mechanisms explain the benefits of exercise in cancer?", "Which herb-drug interactions are clinically significant?"],
+    healer: ["Comfort, nutrition and emotional support are valuable contributions.", "Share what you give with the patient's medical team.", "Stop any remedy that causes side effects, and report them."],
+  },
+  {
+    student: {
+      summary: "After treatment, people have regular check-ups to make sure the cancer hasn't come back, and to stay healthy.",
+      points: ["Why do survivors need check-ups for years?", "How can healthy habits help after cancer?"],
+    },
+    practitioner: ["Provide a written survivorship care plan.", "Monitor for late effects such as cardiotoxicity and neuropathy.", "Set follow-up imaging and labs according to site-specific guidelines."],
+    researcher: ["Can ctDNA monitoring catch recurrence early enough to improve survival?", "Which late effects can be predicted and prevented?"],
+    healer: ["Support healthy eating, activity and emotional well-being after treatment.", "Encourage patients to keep every follow-up appointment.", "Refer back promptly if symptoms return."],
+  },
+  {
+    student: {
+      summary: "Sometimes cancer spreads or comes back. Treatment then aims to control it and keep the person comfortable. Many people live for years this way.",
+      points: ["What does palliative care mean, and why isn't it only for the very end of life?", "How can you support someone living with advanced cancer?"],
+    },
+    practitioner: ["Introduce palliative care early, alongside active treatment.", "Hold goals-of-care conversations and document preferences.", "Reassess performance status before each line of therapy."],
+    researcher: ["How do cancers become resistant over successive lines of treatment?", "What drives the spread of cancers to particular organs?"],
+    healer: ["Comfort, dignity and spiritual care matter greatly at this stage.", "Work with palliative care teams on pain and symptom relief.", "Respect the patient's wishes and cultural values."],
+  },
+];
+
 const STAGE_SCALE = [
   ["0", "In situ", "Abnormal cells that have not invaded nearby tissue."],
   ["I", "Early", "Small and confined to the organ where it started."],
@@ -466,6 +559,11 @@ const STAGE_SCALE = [
   function renderDetail() {
     const s = STAGES[state.stage];
     const c = CANCERS[state.cancer];
+    const mode = K.mode || "adult";
+    const m = STAGE_MODES[state.stage][mode];
+    const summary = m?.summary ?? s.summary;
+    const points = Array.isArray(m) ? m : m?.points ?? s.questions;
+    const pointClass = mode === "practitioner" || mode === "healer" ? "ticks" : "qs";
     const phase = PHASES.find((p) => p.stages.includes(state.stage)).name;
     const note = s.cancerNote && c[s.cancerNote]
       ? `<div class="cancer-note"><strong>${esc(c.term[0].toUpperCase() + c.term.slice(1))}:</strong> ${esc(c[s.cancerNote])}</div>` : "";
@@ -490,7 +588,7 @@ const STAGE_SCALE = [
           <h2>${esc(s.title)}</h2>
         </div>
       </div>
-      <p class="journey-summary">${esc(s.summary)}</p>
+      <p class="journey-summary">${esc(summary)}</p>
       ${note}${staging}${caution}
       <div class="journey-cols">
         <div>
@@ -498,8 +596,8 @@ const STAGE_SCALE = [
           <ul class="ticks">${s.what.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>
         </div>
         <div>
-          <h3>Questions to ask the care team</h3>
-          <ul class="qs">${s.questions.map((q) => `<li>${esc(q)}</li>`).join("")}</ul>
+          <h3>${esc(POINT_TITLES[mode])}</h3>
+          <ul class="${pointClass}">${points.map((q) => `<li>${esc(q)}</li>`).join("")}</ul>
         </div>
       </div>
       <h3>Research this stage in Kira</h3>
@@ -580,6 +678,7 @@ const STAGE_SCALE = [
     if (gene) { leaveFor("drugs"); K.findTargets(gene.dataset.gene); }
   });
   $("#journey-back button").addEventListener("click", () => K.show("journey"));
+  document.addEventListener("kira:mode", () => renderDetail());
   document.addEventListener("kira:view", (e) => {
     if (e.detail === "journey") $("#journey-back").classList.add("hidden");
   });

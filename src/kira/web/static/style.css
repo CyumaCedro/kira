@@ -45,6 +45,7 @@
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { margin: 0; }
 body {
   min-height: 100vh;
@@ -306,6 +307,76 @@ canvas { max-width: 100%; height: auto; display: block; border-radius: 6px; }
 .tumor-type p { margin: 0 0 8px; font-size: 14px; }
 .tumor-type ul { margin: 0 0 10px; padding-left: 18px; font-size: 13px; color: var(--muted); }
 .tumor-research { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Viewing modes */
+.mode-switch {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  margin: 0 0 16px; padding: 8px 10px; border-radius: 10px;
+  background: var(--surface-2); border: 1px solid var(--border);
+}
+.mode-switch:hover { border-color: var(--accent); }
+.mode-switch .mode-text { display: flex; flex-direction: column; line-height: 1.25; flex: 1; min-width: 0; }
+.mode-switch small { color: var(--muted); font-size: 11px; }
+.mode-switch strong { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mode-change { font-size: 12px; color: var(--accent); font-weight: 600; }
+.mode-icon {
+  width: 30px; height: 30px; border-radius: 8px; flex: none;
+  display: grid; place-items: center; font-size: 16px;
+  background: var(--accent-soft); color: var(--accent);
+}
+.mode-banner {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--accent-soft); border-radius: var(--radius);
+  padding: 10px 14px; margin-bottom: 16px;
+}
+.mode-banner p { margin: 0; flex: 1; font-size: 14px; }
+.mode-banner .mode-icon { background: var(--surface); }
+.mode-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(10, 14, 22, .55);
+  display: grid; place-items: center; padding: 16px; overflow-y: auto;
+}
+.mode-dialog {
+  background: var(--surface); border-radius: 14px; padding: 28px;
+  width: min(880px, 100%); box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+}
+.mode-dialog h2 { margin: 0 0 6px; }
+.mode-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 20px 0 14px; }
+.mode-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-align: left;
+  padding: 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface);
+  transition: border-color .15s, transform .15s;
+}
+.mode-card:hover, .mode-card:focus-visible { border-color: var(--accent); transform: translateY(-2px); outline: none; }
+.mode-card.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.mode-card .mode-icon { width: 40px; height: 40px; font-size: 20px; margin-bottom: 6px; }
+.mode-card small { color: var(--muted); font-size: 12px; }
+.mode-desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+.glossary summary { cursor: pointer; font-weight: 700; }
+.glossary-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px 20px; margin: 12px 0 0; }
+.glossary-list dt { font-weight: 700; color: var(--accent); }
+.glossary-list dd { margin: 2px 0 0; font-size: 14px; }
+
+.data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.data-link {
+  display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 8px;
+  border: 1px solid var(--border); text-decoration: none; color: var(--text);
+}
+.data-link:hover { border-color: var(--accent); }
+.data-link strong { font-size: 14px; color: var(--accent); }
+.data-link span { font-size: 12px; color: var(--muted); }
+
+.healer-guide p { margin: 0 0 14px; font-size: 14px; }
+.healer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.healer-block { border-radius: 8px; padding: 12px 14px; border-top: 4px solid var(--h-color); background: var(--surface-2); }
+.healer-block.danger { --h-color: var(--danger); }
+.healer-block.ok { --h-color: var(--ok); }
+.healer-block.warn { --h-color: var(--warn); }
+.healer-block.accent { --h-color: var(--accent); }
+.healer-block h4 { margin: 0 0 8px; font-size: 14px; color: var(--h-color); }
+.healer-block ul { margin: 0; padding-left: 18px; font-size: 13px; }
+.healer-block li { margin-bottom: 5px; }
+
 /* Body map */
 .anatomy-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
 .anatomy-head h3 { margin: 0; }

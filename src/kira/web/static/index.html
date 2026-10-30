@@ -13,6 +13,11 @@
       <span class="logo">K</span>
       <div><strong>Kira</strong><small>Cancer research workbench</small></div>
     </div>
+    <button id="mode-switch" class="mode-switch" aria-label="Change viewing mode">
+      <span class="mode-icon">♥</span>
+      <span class="mode-text"><small>Viewing as</small><strong id="mode-current">Adult</strong></span>
+      <span class="mode-change">Change</span>
+    </button>
     <nav>
       <button data-view="journey" class="active"><span class="ico">➝</span>Cancer journey</button>
       <button data-view="home"><span class="ico">◎</span>All tools</button>
@@ -40,6 +45,12 @@
         <h1>The cancer journey</h1>
         <p>Follow cancer from prevention to survivorship. Each stage explains what happens in plain language, suggests questions to ask, and links to the research behind it.</p>
       </header>
+      <div id="mode-banner" class="mode-banner"></div>
+      <details class="card glossary" data-modes="student" open>
+        <summary>Key words</summary>
+        <dl id="glossary-list" class="glossary-list"></dl>
+      </details>
+      <section class="card data-sources-slot" data-modes="researcher"></section>
       <details id="tumor-explainer" class="card tumor-explainer" open>
         <summary>Tumor vs cancer: what's the difference? <span class="muted">Not every tumor is cancer, and not every cancer is a tumor.</span></summary>
         <div class="tvc">
@@ -123,6 +134,7 @@
         <button class="primary">Search</button>
       </form>
       <div class="chips" id="lit-examples"></div>
+      <section class="card data-sources-slot" data-modes="researcher"></section>
       <div id="lit-status"></div>
       <div id="lit-toolbar" class="toolbar hidden">
         <div class="chips" id="lit-filters"></div>
@@ -143,6 +155,7 @@
         <h1>Integrative remedies</h1>
         <p>Each review searches PubMed for the remedy and labels every study by design. Being listed here means a compound has been studied, not that it works.</p>
       </header>
+      <section id="healer-guide" class="card healer-guide" data-modes="healer"></section>
       <div id="remedy-grid" class="remedy-grid"></div>
       <div id="remedy-detail" class="hidden">
         <div class="card">
@@ -284,7 +297,17 @@
     </section>
   </main>
 
+  <div id="mode-overlay" class="mode-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="mode-title">
+    <div class="mode-dialog">
+      <h2 id="mode-title">Welcome to Kira. Who's exploring today?</h2>
+      <p class="muted">Kira adjusts its language, tools and starting page to you. You can switch any time from the sidebar.</p>
+      <div id="mode-cards" class="mode-cards"></div>
+      <p class="muted small-text">Kira is a research and education tool. It does not give medical advice.</p>
+    </div>
+  </div>
+
   <script src="/static/app.js"></script>
+  <script src="/static/modes.js"></script>
   <script src="/static/anatomy.js"></script>
   <script src="/static/journey.js"></script>
 </body>
