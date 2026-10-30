@@ -45,6 +45,19 @@
         <div id="tumor-types" class="tumor-types"></div>
         <p class="muted small-text">Not every cancer forms a tumor. Leukemias are cancers of the blood and bone marrow; choose "Leukemia" below to follow that journey.</p>
       </details>
+      <section id="anatomy" class="card anatomy">
+        <div class="anatomy-head">
+          <h3>Body map</h3>
+          <span class="muted">Where cancers start, and where they spread</span>
+        </div>
+        <div class="anatomy-grid">
+          <div id="anatomy-svg" class="anatomy-svg"></div>
+          <div>
+            <div id="anatomy-info" class="anatomy-info"></div>
+            <div id="anatomy-organs" class="chips organ-list"></div>
+          </div>
+        </div>
+      </section>
       <div class="journey-picker">
         <span class="muted">Cancer type</span>
         <div class="chips" id="journey-cancers"></div>
@@ -263,6 +276,7 @@
   </main>
 
   <script src="/static/app.js"></script>
+  <script src="/static/anatomy.js"></script>
   <script src="/static/journey.js"></script>
 </body>
 </html>

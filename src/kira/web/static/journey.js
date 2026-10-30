@@ -474,9 +474,18 @@ const STAGE_SCALE = [
     $("#journey-back").classList.remove("hidden");
     K.searchPapers(b.dataset.q);
   });
+  function setCancer(cancer) {
+    if (!CANCERS[cancer]) return;
+    state.cancer = cancer;
+    render();
+    K.anatomy?.show(cancer);
+  }
+  K.journey = { setCancer };
+  K.anatomy?.onPick((organ) => { if (organ.cancer) setCancer(organ.cancer); });
+
   $("#journey-cancers").addEventListener("click", (e) => {
     const b = e.target.closest("[data-cancer]");
-    if (b) { state.cancer = b.dataset.cancer; render(); }
+    if (b) setCancer(b.dataset.cancer);
   });
   $("#journey-steps").addEventListener("click", (e) => {
     const b = e.target.closest("[data-stage]");
@@ -502,4 +511,5 @@ const STAGE_SCALE = [
 
   renderTumorTypes();
   render();
+  K.anatomy?.show(state.cancer);
 })();

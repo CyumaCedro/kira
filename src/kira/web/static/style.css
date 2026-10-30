@@ -270,6 +270,46 @@ canvas { max-width: 100%; height: auto; display: block; border-radius: 6px; }
 .tumor-type p { margin: 0 0 8px; font-size: 14px; }
 .tumor-type ul { margin: 0 0 10px; padding-left: 18px; font-size: 13px; color: var(--muted); }
 .tumor-research { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Body map */
+.anatomy-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.anatomy-head h3 { margin: 0; }
+.anatomy-head .muted { font-size: 13px; }
+.anatomy-grid { display: grid; grid-template-columns: minmax(180px, 260px) 1fr; gap: 24px; align-items: start; }
+.anatomy-svg svg { width: 100%; height: auto; max-height: 520px; display: block; }
+.silhouette > * { fill: var(--surface-2); stroke: var(--border); stroke-width: 1.5; }
+.skin-active .silhouette > * { stroke: var(--accent); stroke-width: 2.5; }
+.organ { cursor: pointer; outline: none; }
+.organ > :not(title) {
+  fill: var(--organ); stroke: var(--organ-edge); stroke-width: 1;
+  transition: fill .15s, stroke .15s, opacity .15s; opacity: .85;
+}
+.organ.stroked > :not(title) { fill: none; stroke: var(--organ); stroke-width: 9; stroke-linecap: round; }
+.organ:hover > :not(title), .organ:focus-visible > :not(title) { opacity: 1; stroke: var(--accent); stroke-width: 2; }
+.organ.stroked:hover > :not(title), .organ.stroked:focus-visible > :not(title) { stroke: var(--accent); stroke-width: 10; }
+.organ.selected > :not(title) { fill: var(--accent); stroke: var(--accent); opacity: 1; }
+.organ.stroked.selected > :not(title) { fill: none; stroke: var(--accent); }
+.organ.spread-target > :not(title) { stroke: var(--danger); stroke-width: 2; stroke-dasharray: 3 2; opacity: 1; }
+.organ.stroked.spread-target > :not(title) { stroke: var(--danger); stroke-width: 9; stroke-dasharray: none; opacity: .7; }
+.spread-line {
+  fill: none; stroke: var(--danger); stroke-width: 1.6; stroke-dasharray: 4 3;
+  pointer-events: none; animation: flow 1s linear infinite;
+}
+.arrow-head { fill: var(--danger); }
+@keyframes flow { to { stroke-dashoffset: -14; } }
+@media (prefers-reduced-motion: reduce) { .spread-line { animation: none; } }
+.anatomy-info { min-height: 150px; }
+.anatomy-info p { margin: 4px 0 10px; font-size: 14px; }
+.organ-title { font-size: 20px; margin: 2px 0 4px; }
+.organ-facts { display: grid; grid-template-columns: 150px 1fr; gap: 6px 14px; margin: 0 0 14px; font-size: 14px; }
+.organ-facts dt { font-weight: 600; color: var(--muted); }
+.organ-facts dd { margin: 0; }
+.spread-key { display: inline-block; font-size: 11px; font-weight: 600; color: var(--danger); border: 1px dashed var(--danger); border-radius: 4px; padding: 0 6px; margin-left: 4px; }
+.organ-list { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.organ-list .chip { font-size: 12px; padding: 3px 10px; }
+:root { --organ: #d98f8f; --organ-edge: #b86f6f; }
+:root[data-theme="dark"] { --organ: #a35d5d; --organ-edge: #c47c7c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --organ: #a35d5d; --organ-edge: #c47c7c; } }
+
 .journey-picker { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
 .journey-picker .chips { margin: 0; }
 .journey-track { padding: 14px 18px 18px; overflow-x: auto; }
@@ -361,13 +401,17 @@ canvas { max-width: 100%; height: auto; display: block; border-radius: 6px; }
 @media (max-width: 860px) {
   .journey-cols { grid-template-columns: 1fr; }
   .tumor-types { grid-template-columns: 1fr; }
+  .anatomy-grid { grid-template-columns: 1fr; }
+  .anatomy-svg svg { max-height: 380px; margin: 0 auto; }
+  .organ-facts { grid-template-columns: 1fr; }
   .stage-scale { grid-template-columns: 1fr; }
   .journey-detail { padding: 18px; }
 }
 
 @media (max-width: 860px) {
-  body { grid-template-columns: 1fr; }
-  .sidebar { position: static; height: auto; flex-direction: column; padding: 12px 16px; }
+  /* minmax(0, …) lets the scrolling nav row shrink instead of widening the page */
+  body { grid-template-columns: minmax(0, 1fr); }
+  .sidebar { min-width: 0; position: static; height: auto; flex-direction: column; padding: 12px 16px; }
   .brand { padding-bottom: 10px; }
   nav { flex-direction: row; overflow-x: auto; }
   nav button { white-space: nowrap; }
