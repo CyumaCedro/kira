@@ -57,7 +57,61 @@ const CANCERS = {
     markers: "Germline genetic testing is recommended for every patient. BRCA variants can open PARP-inhibitor options.",
     biomarkers: ["KRAS", "BRCA2", "NTRK1"],
   },
+  brain: {
+    label: "Brain tumors",
+    term: "brain tumor",
+    risk: "Few known causes: earlier radiation to the head and rare inherited syndromes such as NF1 and Li-Fraumeni.",
+    screening: "No screening for the general population. MRI is used when symptoms such as headaches, seizures or vision changes appear.",
+    staging: "Graded (WHO grade 1 to 4) instead of staged with TNM, because they rarely spread outside the brain. Many, such as most meningiomas, are benign but can still need treatment because of where they grow.",
+    markers: "IDH mutation, 1p/19q codeletion and MGMT methylation classify gliomas and guide treatment.",
+    biomarkers: ["IDH1", "IDH2", "EGFR", "BRAF"],
+  },
+  leukemia: {
+    label: "Leukemia",
+    term: "leukemia",
+    risk: "Earlier chemotherapy or radiation, benzene exposure, smoking and some inherited conditions such as Down syndrome.",
+    screening: "No screening. Leukemia is often first found through a routine blood count.",
+    staging: "No solid tumor forms, so TNM staging doesn't apply. Instead it is classified by cell type (myeloid or lymphoid, acute or chronic), genetic changes and risk group.",
+    markers: "Changes such as FLT3, NPM1 and IDH1/2 mutations and the BCR-ABL fusion guide targeted treatment.",
+    biomarkers: ["FLT3", "IDH1", "ABL1", "BTK", "JAK2"],
+  },
 };
+
+const TUMOR_TYPES = [
+  {
+    kind: "benign",
+    title: "Benign tumors",
+    tag: "Not cancer",
+    text: "Grow, but don't invade nearby tissue or spread. Usually not life-threatening, though location matters: a benign brain tumor can still press on the brain.",
+    examples: ["Lipoma (fatty lump)", "Uterine fibroids", "Most meningiomas", "Ordinary moles"],
+    research: [
+      { label: "Meningioma outcomes", q: "meningioma treatment outcomes" },
+      { label: "Fibroid treatments", q: "uterine fibroids treatment randomized trial" },
+    ],
+  },
+  {
+    kind: "pre",
+    title: "Precancerous growths",
+    tag: "Can become cancer",
+    text: "Not cancer yet, but can turn into cancer over years. Finding and removing them is one of the most effective ways to prevent cancer.",
+    examples: ["Colon polyps (adenomas)", "Cervical dysplasia (CIN)", "Barrett's esophagus", "DCIS (stage 0 breast)"],
+    research: [
+      { label: "Polyp to cancer", q: "colorectal adenoma progression to carcinoma" },
+      { label: "Cervical precancer", q: "cervical intraepithelial neoplasia HPV progression" },
+    ],
+  },
+  {
+    kind: "malignant",
+    title: "Malignant tumors",
+    tag: "Cancer",
+    text: "Invade nearby tissue and can spread through blood or lymph to other organs (metastasis). This is what \"cancer\" means.",
+    examples: ["Carcinomas (organ linings, the most common)", "Sarcomas (bone, muscle)", "Gliomas (brain)", "Lymphomas and myeloma"],
+    research: [
+      { label: "How cancers spread", q: "metastasis mechanisms review" },
+      { label: "Sarcoma research", q: "soft tissue sarcoma treatment" },
+    ],
+  },
+];
 
 const PHASES = [
   { name: "Before diagnosis", stages: [0, 1] },
@@ -139,6 +193,7 @@ const STAGES = [
     icon: "◐",
     summary: "Staging describes how large the cancer is and how far it has spread. It is the main guide to treatment and outlook.",
     staging: true,
+    cancerNote: "staging",
     what: [
       "T describes the size and extent of the main tumor.",
       "N describes whether cancer has reached nearby lymph nodes.",
@@ -295,6 +350,18 @@ const STAGE_SCALE = [
   const term = () => CANCERS[state.cancer].term;
   const fill = (s) => s.replaceAll("{cancer}", term());
 
+  function renderTumorTypes() {
+    $("#tumor-types").innerHTML = TUMOR_TYPES.map((t) => `
+      <div class="tumor-type ${t.kind}">
+        <div class="tumor-tag">${esc(t.tag)}</div>
+        <h3>${esc(t.title)}</h3>
+        <p>${esc(t.text)}</p>
+        <ul>${t.examples.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
+        <div class="tumor-research">${t.research.map((r) =>
+          `<button class="chip" data-q="${esc(r.q)}">${esc(r.label)} →</button>`).join("")}</div>
+      </div>`).join("");
+  }
+
   function renderCancers() {
     $("#journey-cancers").innerHTML = Object.entries(CANCERS).map(([key, c]) =>
       `<button class="chip ${key === state.cancer ? "active" : ""}" data-cancer="${key}">${esc(c.label)}</button>`).join("");
@@ -321,7 +388,7 @@ const STAGE_SCALE = [
     const c = CANCERS[state.cancer];
     const phase = PHASES.find((p) => p.stages.includes(state.stage)).name;
     const note = s.cancerNote && c[s.cancerNote]
-      ? `<div class="cancer-note"><strong>${esc(c.label)} cancer:</strong> ${esc(c[s.cancerNote])}</div>` : "";
+      ? `<div class="cancer-note"><strong>${esc(c.term[0].toUpperCase() + c.term.slice(1))}:</strong> ${esc(c[s.cancerNote])}</div>` : "";
     const staging = s.staging ? `
       <div class="stage-scale">
         ${STAGE_SCALE.map(([n, name, desc], i) => `
@@ -331,7 +398,7 @@ const STAGE_SCALE = [
       </div>` : "";
     const caution = s.caution ? `<div class="caution-box">⚠ ${esc(s.caution)}</div>` : "";
     const genes = s.biomarkers ? `
-      <div class="gene-row"><span class="muted">Look up drugs for common ${esc(c.label === "All cancers" ? "" : c.label.toLowerCase() + " ")}cancer biomarkers:</span>
+      <div class="gene-row"><span class="muted">Look up drugs for common ${esc(c.term)} biomarkers:</span>
         ${c.biomarkers.map((g) => `<button class="chip gene" data-gene="${g}">${g}</button>`).join("")}
       </div>` : "";
 
@@ -399,6 +466,14 @@ const STAGE_SCALE = [
     }
   }
 
+  $("#tumor-types").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-q]");
+    if (!b) return;
+    $("#journey-back-label").textContent = "Are all tumors cancer?";
+    K.show("literature");
+    $("#journey-back").classList.remove("hidden");
+    K.searchPapers(b.dataset.q);
+  });
   $("#journey-cancers").addEventListener("click", (e) => {
     const b = e.target.closest("[data-cancer]");
     if (b) { state.cancer = b.dataset.cancer; render(); }
@@ -425,5 +500,6 @@ const STAGE_SCALE = [
     if (e.key === "ArrowLeft") goStage(state.stage - 1);
   });
 
+  renderTumorTypes();
   render();
 })();

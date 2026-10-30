@@ -254,6 +254,22 @@ canvas { max-width: 100%; height: auto; display: block; border-radius: 6px; }
   padding: 8px 12px; margin-bottom: 18px; font-size: 13px;
 }
 .journey-back button { background: var(--surface); }
+.tumor-explainer summary { cursor: pointer; font-weight: 700; font-size: 15px; }
+.tumor-explainer summary .muted { font-weight: 400; margin-left: 6px; }
+.tumor-explainer[open] summary { margin-bottom: 14px; }
+.tumor-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+.tumor-type { border: 1px solid var(--border); border-top: 4px solid var(--t-color); border-radius: 8px; padding: 14px; }
+.tumor-type.benign { --t-color: var(--ok); --t-soft: var(--ok-soft); }
+.tumor-type.pre { --t-color: var(--warn); --t-soft: var(--warn-soft); }
+.tumor-type.malignant { --t-color: var(--danger); --t-soft: var(--danger-soft); }
+.tumor-tag {
+  display: inline-block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  background: var(--t-soft); color: var(--t-color); padding: 2px 8px; border-radius: 4px;
+}
+.tumor-type h3 { margin: 8px 0 4px; }
+.tumor-type p { margin: 0 0 8px; font-size: 14px; }
+.tumor-type ul { margin: 0 0 10px; padding-left: 18px; font-size: 13px; color: var(--muted); }
+.tumor-research { display: flex; flex-wrap: wrap; gap: 6px; }
 .journey-picker { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
 .journey-picker .chips { margin: 0; }
 .journey-track { padding: 14px 18px 18px; overflow-x: auto; }
@@ -344,6 +360,7 @@ canvas { max-width: 100%; height: auto; display: block; border-radius: 6px; }
 
 @media (max-width: 860px) {
   .journey-cols { grid-template-columns: 1fr; }
+  .tumor-types { grid-template-columns: 1fr; }
   .stage-scale { grid-template-columns: 1fr; }
   .journey-detail { padding: 18px; }
 }
